@@ -1,0 +1,148 @@
+$(document).ready(function() {
+ if($('#laboratories').hasClass('laboratories-mml')){
+   $('#mml-sidebar').removeClass('hidden');
+}
+	if($('#laboratories').hasClass('laboratories-issl')){
+   $('#issl-sidebar').removeClass('hidden');
+}
+});
+
+
+
+$(function () {
+	$("#laboratories #Accordion1").accordion({
+		animate: {
+			easing: "swing"
+		},
+		collapsible: true,
+		active: false,
+		icons: {
+			header: "ui-icon-plus"
+		},
+		heightStyle: "content"
+	});
+
+	$('#laboratories #Accordion1').bind('click', function () {
+		var self = this;
+		setTimeout(function () {
+			theOffset = $(self).offset();
+			$('body,html').animate({
+				scrollTop: theOffset.top - 142
+			});
+		}, 200);
+	});
+});
+
+
+
+$('#laboratories #Accordion1').on('shown.bs.collapse', function () {
+	var panel = $(this).find('.in');
+	$('html, body').animate({
+		scrollTop: theOffset.top - 50
+	}, 500);
+});
+
+
+
+$(function () {
+	$("#laboratories #Accordion2").accordion({
+		animate: {
+			easing: "swing"
+		},
+		collapsible: true,
+		active: false,
+		icons: {
+			header: "ui-icon-plus"
+		},
+		heightStyle: "content"
+	});
+
+	$('#laboratories #Accordion2').bind('click', function () {
+		var self = this;
+		setTimeout(function () {
+			theOffset = $(self).offset();
+			$('body,html').animate({
+				scrollTop: theOffset.top - 207
+			});
+		}, 200);
+	});
+});
+
+
+
+$('#laboratories #Accordion2').on('shown.bs.collapse', function () {
+	var panel = $(this).find('.in');
+	$('html, body').animate({
+		scrollTop: theOffset.top - 50
+	}, 500);
+});
+
+
+
+
+$(function () {
+	$("#laboratories #Accordion3").accordion({
+		animate: {
+			easing: "swing"
+		},
+		collapsible: true,
+		active: false,
+		icons: {
+			header: "ui-icon-plus"
+		},
+		heightStyle: "content"
+	});
+
+	$('#laboratories #Accordion3').bind('click', function () {
+		var self = this;
+		setTimeout(function () {
+			theOffset = $(self).offset();
+			$('body,html').animate({
+				scrollTop: theOffset.top - 248
+			});
+		}, 200);
+	});
+});
+
+
+
+$('#laboratories #Accordion3').on('shown.bs.collapse', function () {
+	var panel = $(this).find('.in');
+	$('html, body').animate({
+		scrollTop: theOffset.top - 50
+	}, 500);
+});
+
+
+
+$(function () {
+	$("#laboratories #Accordion4").accordion({
+		animate: {
+			easing: "swing"
+		},
+		collapsible: true,
+		active: false,
+		icons: {
+			header: "ui-icon-plus"
+		},
+		heightStyle: "content"
+	});
+
+	$('#laboratories #Accordion4').bind('click', function () {
+		var self = this;
+		setTimeout(function () {
+			theOffset = $(self).offset();
+			$('body,html').animate({
+				scrollTop: theOffset.top - 140
+			});
+		}, 200);
+	});
+});
+
+
+$('#laboratories #Accordion4').on('shown.bs.collapse', function () {
+	var panel = $(this).find('.in');
+	$('html, body').animate({
+		scrollTop: theOffset.top - 50
+	}, 500);
+});

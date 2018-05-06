@@ -1,0 +1,42 @@
+jQuery.noConflict();
+
+jQuery(document).ready(function(){
+	//console.log('r1');
+	jQuery('h4.main-title.widget-title').each(function() {
+		if (jQuery(this).html() == '') {
+			jQuery(this).hide();
+		}	
+	});
+	
+	jQuery('.c_btn_main').click(function(){
+		jQuery('.quot_bg').fadeIn();
+		jQuery('.quot_pp_cont').fadeIn();
+	});
+	jQuery('.quot_bg').click(function(){
+		jQuery('.quot_bg').fadeOut();
+		jQuery('.quot_pp_cont').fadeOut();
+	});
+	jQuery('.qt_close').click(function(){
+		jQuery('.quot_bg').fadeOut();
+		jQuery('.quot_pp_cont').fadeOut();
+	});
+	jQuery('.top_quot_btn_holder span').click(function(){
+		jQuery(this).addClass('in');
+		jQuery(this).siblings().removeClass('in');
+		quot_a_version = jQuery(this).data("quotversion");
+		jQuery(".quote_main_cont>div[data-quotversion='" + quot_a_version +"']").siblings().fadeOut(function() {
+    		jQuery(".quote_main_cont>div[data-quotversion='" + quot_a_version +"']").fadeIn();	
+ 		 });
+	});
+	jQuery('.tab-list.tab-menu a').click(function(e){
+		e.preventDefault();
+		jQuery(this).addClass('in');
+		jQuery(this).parent().siblings().find('a').removeClass('in');
+		quot_a_var = jQuery(this).data("quotvar");
+		jQuery(this).parents().eq(1).siblings().find(".quote_tab_i[data-quotvar='" + quot_a_var +"']").siblings().hide();
+		jQuery(this).parents().eq(1).siblings().find(".quote_tab_i[data-quotvar='" + quot_a_var +"']").show();
+		
+	});
+	
+	
+});

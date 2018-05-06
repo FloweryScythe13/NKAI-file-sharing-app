@@ -1,0 +1,534 @@
+img {
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color: Beige;
+    font-family: Arial, sans-serif;
+    font-size: 12pt;
+    color: black;
+    margin: 0 0 3ex 0;
+}
+
+div#frame {
+    background-color: Beige;
+    width: 100ex;
+    margin: 0 auto 0 auto;
+    vertical-align: top;
+}
+
+div#banner-background {
+    background-color: Sienna;
+    text-align: center;
+}
+
+div#banner {
+    text-align: left;
+    display: inline-block;
+    width: 100ex;
+    margin: 1ex auto 2ex auto;
+}
+
+div#banner-inner {
+    font-family: Arial, serif;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+    color: white;
+    margin-left: 1ex;
+    text-shadow: 0 0 1ex rgba(255, 234, 185, 0.2),
+		 0 0 2ex rgba(255, 234, 185, 0.1),
+		 0.1em 0.1em 0.2em black;
+}
+
+div#banner #kestrel {
+    font-size: 250%;
+    letter-spacing: 2pt;
+    padding: 0;
+    margin: 0;
+}
+
+div#banner #institute {
+    font-size: 175%;
+    letter-spacing: 2pt;
+    padding: 0;
+    margin: 0;
+}
+
+div#main {
+    margin: 2ex 2ex 2ex 2ex;
+}
+
+h1 {
+    font-size: 160%;
+    font-weight: bold;
+    text-align: left;
+    margin-top: 0;
+    margin-bottom: 1ex;
+}
+
+h2 {
+    font-size: 130%;
+    font-weight: bold;
+    text-align: left;
+    margin-top: 2ex;
+    margin-bottom: 0;
+}
+
+h1 + h2 {
+    margin-top: 1ex;
+}
+
+h3 {
+    font-size: 115%;
+    font-weight: bold;
+    margin-top: 2ex;
+    margin-bottom: 0;
+}
+
+p {
+    margin-top: 3ex;
+    margin-bottom: 0;
+}
+
+p + p {
+    margin-top: 2ex;
+}
+
+h1 + div.content {
+    margin-top: 1ex;
+}
+
+h2 + p {
+    margin-top: 1ex;
+}
+
+h3 + p {
+    margin-top: 0.5ex;
+}
+
+.announcement-outer {
+    letter-spacing: 2px;
+    margin: 5ex auto 1ex auto;
+    text-align: center;
+}
+.announcement {
+    font-weight: bold;
+    text-align: center;
+    border: 2px solid black;
+    background-color: PapayaWhip;
+    display: inline-block;
+    padding: 1ex;
+}
+
+p.banner {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 3ex;
+    margin-bottom: 1ex;
+}
+
+a:link {
+    text-decoration: none;
+    color: Chocolate;
+}
+a:visited {
+    text-decoration: none;
+    color: Peru;
+}
+a:hover {
+    text-decoration: none;
+    color: red;
+}
+a:active {
+    text-decoration: none;
+    color: red;
+}
+
+/*
+ * The following sections encode the logic of the navigation menu.
+ * The menu has a "button" for the following pages:
+ *   home, about, projects, people, careers and contact.
+ *
+ * A button is to be active except when its page is the currently displayed page.
+ *
+ * An active button changes colour when hovered over, changes cursor when moused-over to 
+ * indicate a link, and is clickable.
+ *
+ * An inactive button is displayed in a different colour, does not
+ * change colour when hovered over, does not change cursor, and is not
+ * clickable.
+ * 
+ * When the currently displayed page is a descendant of a button's page, the page is active
+ * but is displayed in a different colour. Its hover colour is the same as the hover colour
+ * for an active button. (An example is a peronal home page, which is a descendant of the
+ * people page.)
+ */
+div#outer-nav {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    height: 2ex;
+}
+
+.nav {
+    position: relative;
+    top: -1.9ex;
+    display: inline-block;
+    margin: 0 auto 0 auto;
+}
+
+.nav table {
+    padding: 0;
+    margin: 0;
+}
+
+.nav tbody {
+    padding: 0;
+    margin: 0;
+}
+
+.nav tr {
+    padding: 0;
+    margin: 0;
+}
+
+.nav td {
+    padding: 0 1ex;
+    margin: 0;
+    text-align: center;
+}
+
+/* Link text in a navigation button. */
+.nav a {
+    display: inline-block;
+    background-color: Peru;
+    color: white;
+    width: 11ex;
+    padding: 0.4ex 0;
+    font-weight: bold;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    box-shadow: 3px 3px 2px 2px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.1s linear, box-shadow 0.1s linear;
+    -moz-transition: background-color 0.1s linear, box-shadow 0.1s linear;
+    -wekbit-transition: background-color 0.1s linear, box-shadow 0.1s linear;
+}
+
+/* Ensure links in inactive nagivation buttons do not change cursor and are not clickable. */
+#home-page .nav .home a {
+    pointer-events: none;
+    cursor: default;
+}
+#about-page .nav .about a {
+    pointer-events: none;
+    cursor: default;
+}
+#projects-page .nav .projects a {
+    pointer-events: none;
+    cursor: default;
+}
+#people-page .nav .people a {
+    pointer-events: none;
+    cursor: default;
+}
+#careers-page .nav .careers a {
+    pointer-events: none;
+    cursor: default;
+}
+#contact-page .nav .contact a {
+    pointer-events: none;
+    cursor: default;
+}
+
+/* Active navigation button changes colour when hovered over. */
+.nav a:hover {
+    background-color: DarkOrange;
+    box-shadow: 3px 3px 2px 2px rgba(153, 86, 0, 0.3), 1px 3px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Inactive navigation buttons. */
+#home-page .nav .home a {
+    background-color: Maroon;
+    box-shadow: 3px 3px 2px 2px rgba(0, 0, 0, 0.5);
+}
+#about-page .nav .about a {
+    background-color: Maroon;
+    box-shadow: 3px 3px 2px 2px rgba(0, 0, 0, 0.5);
+}
+#projects-page .nav .projects a {
+    background-color: Maroon;
+    box-shadow: 3px 3px 2px 2px rgba(0, 0, 0, 0.5);
+}
+#people-page .nav .people a {
+    background-color: Maroon;
+    box-shadow: 3px 3px 2px 2px rgba(0, 0, 0, 0.5);
+}
+#careers-page .nav .careers a {
+    background-color: Maroon;
+    box-shadow: 3px 3px 2px 2px rgba(0, 0, 0, 0.5);
+}
+#contact-page .nav .contact a {
+    background-color: Maroon;
+    box-shadow: 3px 3px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Active, descendant nagivation buttons. */
+.project-page .nav .projects a {
+    background-color: Chocolate;
+}
+.project-page .nav :hover.projects a {
+    background-color: DarkOrange;
+    box-shadow: 3px 3px 2px 2px rgba(153, 86, 0, 0.3), 1px 3px 2px 2px rgba(0, 0, 0, 0.2);
+}
+.personal-page .nav .people a {
+    background-color: Chocolate;
+}
+.personal-page .nav :hover.people a {
+    background-color: DarkOrange;
+    box-shadow: 3px 3px 2px 2px rgba(153, 86, 0, 0.3), 1px 3px 2px 2px rgba(0, 0, 0, 0.2);
+}
+#location-page .nav .contact a {
+    background-color: Chocolate;
+}
+#location-page .nav :hover.contact a {
+    background-color: DarkOrange;
+    box-shadow: 3px 3px 2px 2px rgba(153, 86, 0, 0.3), 1px 3px 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+/*
+ * This ends the encoding of the logic of the navigation menu.
+ */
+
+div.content {
+}
+
+div.content > p:first-child {
+    margin-top: 0;
+}
+
+*.center {
+    margin: 2ex auto;
+}
+
+*.left {
+    margin-left: 3ex;
+}
+
+*.centered {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.justify p {
+    text-align: justify;
+}
+
+.staff-summary {
+    display: block;
+    width: 600;
+    margin: 4ex auto 2ex auto;
+}
+
+.staff-summary div#name {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 150%;
+    padding-bottom: 1ex;
+}
+
+.staff-summary img {
+    vertical-align: bottom;
+    margin-right: 2ex;
+}
+
+.staff-summary td {
+    vertical-align: middle;
+}
+
+.staff-summary table#phone-and-email {
+    margin: 0 auto 2px auto;
+    border: none;
+    border-collapse: collapse;
+}
+
+.staff-summary table#phone-and-email th {
+    text-align: right;
+    font-weight: normal;
+    padding-right: 0.5ex;
+}
+
+#people-page #people-list {
+    display: inline-block;
+    margin: 0 auto 0 auto;
+    border: none;
+    border-collapse: collapse;
+}
+
+#people-page #people-list tr {
+}
+
+#people-page #people-list th {
+    text-align: left;
+    font-weight: bold;
+    vertical-align: bottom;
+    padding: 0 2ex 0 0;
+    width: 40%;
+}
+
+#people-page #people-list td {
+    text-align: left;
+    vertical-align: bottom;
+}
+
+#people-page #people-list td p {
+    margin: 0.5ex 0 0 2ex;
+    padding: 0;
+}
+
+#people-page #people-list td.summary {
+    padding-bottom: 2ex;
+}
+
+#people-page #people-list td img {
+    vertical-align: bottom;
+}
+
+#contact-page table.left {
+    margin: 0 auto 0 0;
+    border: none;
+    border-collapse: collapse;
+}
+
+#contact-page table.left th {
+    text-align: left;
+    font-weight: bold;
+    vertical-align: top;
+    padding-right: 1ex;
+}
+
+#contact-page table.left td {
+    text-align: left;
+    font-weight: normal;
+    vertical-align: top;
+    padding-right: 2ex;
+}
+
+#contact-page #contacts {
+    margin-top: 2ex;
+    margin-bottom: 2ex;
+}
+
+.directions {
+    display: inline-block;
+    width: 40%;
+    margin: 2ex 1ex;
+    vertical-align: top;
+}
+
+.block {
+    display: block;
+    width: 100%;
+    margin-left: 0;
+}
+
+.directions span:first-child {
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+#bay-area-map {
+    float: right;
+    border: 1px solid blue;
+}
+
+#bay-area-map img {
+    vertical-align: middle;
+}
+
+div ul {
+    margin-top: 0.5ex;
+    padding-top: 0;
+}
+
+figure {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+figcaption {
+    text-align: center;
+}
+#location-page figure#map span {
+    font-weight: bold;
+}
+
+dt {
+    font-weight: bold;
+    margin-top: 2ex;
+    margin-bottom: 0;
+}
+
+dd {
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: justify;
+}
+
+dd p {
+    margin-top: 1.5ex;
+}
+
+dd p:first-child {
+    margin-top: 0.5ex;
+}
+
+dd {
+    margin-left: 2ex;
+}
+
+ul {
+    padding-left: 1em;
+    margin-left: 1em;
+}
+
+dd ul {
+    padding-left: 1ex;
+    margin-left: 1ex;
+}
+
+dt:target {
+    text-decoration: underline;
+}
+
+.outer {
+    text-align: center;
+}
+
+#people-page td img { 
+  visibility: hidden;
+}
+
+.logo {
+    vertical-align: middle;
+    padding: 0;
+    margin: 3px;
+}
+
+#banner a:link {
+    color: white;
+}
+#banner a:visited {
+    color: white;
+}
+#banner a:hover {
+    color: white;
+}
+#banner a:active {
+    color: white;
+}
