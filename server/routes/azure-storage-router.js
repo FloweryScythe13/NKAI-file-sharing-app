@@ -10,7 +10,7 @@ var azureStorage = function() {
     var runFileServiceUpload = function() {
         var fileService = azure.createFileService(readConfig().connectionString);
         var shareName = 'newknowledgeapp';
-        fileService.
+        
         fileService.createShareIfNotExists(shareName, function (error) {
             if (error) {
                 console.log('An error occurred when creating the share');
@@ -59,57 +59,113 @@ var azureStorage = function() {
 
        
     }
+    //Use this class to wrap all continuation tokens/callbacks with Promises
+    function AzureFileReader(fileService, shareName, directoryName) {
+        this.fileService = fileService;
+        this.shareName = shareName;
+        this.directoryName = directoryName;
+        this.items = { files: [], directories: [] }
+    }
+    //Use this class to retrieve the files and directories and turn the result directly into a promise
+    AzureFileReader.prototype.retriever = function(token) {
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            self.fileService.listFilesAndDirectoriesSegmented(self.shareName, self.directoryName, token, null, function(error, result) {
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                }
+                else {
+                    resolve(result);
+                }
+            })
+        });
+    };
 
-    var getFullCatalog = function() {
+    //Recursively read the results from retriever
+    AzureFileReader.prototype.listAllFilesAndDirectories = function(token) {
+        var self = this;
+        function handler(r) {
+            self.items.files.push.apply(self.items.files, r.entries.files);
+            self.items.directories.push.apply(self.items.directories, r.entries.directories);
+            if (r.continuationToken) {
+                return self.listAllFilesAndDirectories(r.continuationToken);
+            }
+            else {
+                return self.items;
+            }
+        }
+
+        return this.retriever(token).then(handler);
+    }
+
+
+    function getFullCatalog(directoryName) {
         var fileService = azure.createFileService(readConfig().connectionString);
 
         var shareName = 'newknowledgeapp';
-        var directory = '/';
+        var directory = directoryName ? decodeURI(directoryName) : '/';
         var output = '';
-        listFilesAndDirectories(fileService, shareName, directory, null, null, output, function (error, results) {
-            if (error) {
-                console.log('Error occurred when listing all files: ' + error.message);
-            }
-            else {
-                var x = '';
-                var y = '';
-                for (var i = 0; i < results.files.length; i++) {
-                    x = results.files[i].name;
-                    output += x + '\n'; 
-                    console.log(util.format('  - %s (type: file)'), results.files[i].name);
-                }
-                for (var j = 0; j < results.directories.length; j++) {
-                    y = results.directories[j].name;
-                    output += y + '\n'; 
-                    console.log(util.format('  - %s (type: directory)'), results.directories[j].name);
-                }
-            }
-        })
-        return output;
+
+        var reader = new AzureFileReader(fileService, shareName, directory);
+        var promise = reader.listAllFilesAndDirectories().then(function(values) {
+            console.log(values);
+            return values;
+        }).catch(function(error) {
+            console.log(error);
+        });
+
+        return promise;
+
+        // return await listFilesAndDirectories(fileService, shareName, directory, null, null, output, function (error, results) {
+        //     if (error) {
+        //         console.log('Error occurred when listing all files: ' + error.message);
+        //     }
+        //     else {
+        //         var x = '';
+        //         var y = '';
+        //         for (var i = 0; i < results.files.length; i++) {
+        //             x = results.files[i].name;
+        //             output += x + '\n'; 
+        //             console.log(util.format('  - %s (type: file)'), results.files[i].name);
+        //         }
+        //         for (var j = 0; j < results.directories.length; j++) {
+        //             y = results.directories[j].name;
+        //             output += y + '\n'; 
+        //             console.log(util.format('  - %s (type: directory)'), results.directories[j].name);
+        //         }
+        //         return output;
+        //     }
+        // });
+        //return !!output ? output : 'no results';
     }
     
     
     function listFilesAndDirectories(fileService, share, directory, token, options, output, callback) {
-        var items = { files: [], directories: []};
         
-        fileService.listFilesAndDirectoriesSegmented(share, directory, token, options, function(error, result) {
-          items.files.push.apply(items.files, result.entries.files);
-          items.directories.push.apply(items.directories, result.entries.directories);
-      
-          var token = result.continuationToken;
-          if (token) {
+        var items = { files: [], directories: [] };
+        fileService.listFilesAndDirectories()
+        fileService.listFilesAndDirectoriesSegmented((share, directory, token, options, function(error, result) {
+            items.files.push.apply(items.files, result.entries.files);
+            items.directories.push.apply(items.directories, result.entries.directories);
+        
+            var token = result.continuationToken;
+            if (token) {
             var x = '   Received a page of results. There are ' + result.entries.length + ' items on this page.'
             console.log(x);
-            output += x + '\n';
-            listFilesAndDirectories(fileService, share, directory, token, options, callback);
-          } 
-          else {
+            //output += x + '\n';
+            return listFilesAndDirectories(fileService, share, directory, token, options, output, callback);
+            } 
+            else {
             var y = '   Completed listing. There are ' + items.files.length + ' files and ' + items.directories.length + ' directories.'
             console.log(y);
-            output += y + '\n';
-            callback(null, items);
-          }
-        });
+            //output += y + '\n';
+            return(callback(null, items));
+            }
+            resolve(output);
+        }))
+        
+        
     }
 
     return {

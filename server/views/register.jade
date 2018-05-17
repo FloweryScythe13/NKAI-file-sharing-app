@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    h1=title
+
+    form(action="/register", method="post")
+        input(type="email", name="username")
+        input(type="password", name="password")
+        button(type="submit") Register

@@ -1,0 +1,21 @@
+extends layout
+
+block content
+    h1=title
+    -var ob = JSON.parse(body)
+    h4 Directories
+    ul
+    - for(var i = 0; i < ob.directories.length; i++)
+        li 
+            span= ob.directories[i].name
+    br
+    h4 Files
+    ul
+    - for(var j = 0; j < ob.files.length; j++)
+        li
+            span= ob.files[j].name
+    //- -for(var file in ob.files)
+    //- if(!!file) {
+    //-     p #{file.name}
+    //- }
+    
