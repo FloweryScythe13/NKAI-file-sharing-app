@@ -20,7 +20,6 @@ class App extends Component {
         var x = output;
         console.log('x is');
         console.log(x)
-        console.log(output.directories)
         that.setState({ output: x.output });
       })
   }

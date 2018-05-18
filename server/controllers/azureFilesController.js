@@ -2,7 +2,7 @@ var azure = require('azure-storage');
 var util = require('util');
 var fs = require('fs');
 
-var azureStorage = function() {
+var azureFilesController = function() {
     function readConfig() {
         return JSON.parse(fs.readFileSync('./app.config', 'utf8'));
       }
@@ -59,6 +59,13 @@ var azureStorage = function() {
 
        
     }
+
+    
+
+
+
+
+
     //Use this class to wrap all continuation tokens/callbacks with Promises
     function AzureFileReader(fileService, shareName, directoryName) {
         this.fileService = fileService;
@@ -99,6 +106,7 @@ var azureStorage = function() {
         return this.retriever(token).then(handler);
     }
 
+    
 
     function getFullCatalog(directoryName) {
         var fileService = azure.createFileService(readConfig().connectionString);
@@ -139,6 +147,8 @@ var azureStorage = function() {
         // });
         //return !!output ? output : 'no results';
     }
+
+    
     
     
     function listFilesAndDirectories(fileService, share, directory, token, options, output, callback) {
@@ -168,11 +178,14 @@ var azureStorage = function() {
         
     }
 
+    
+
     return {
         runFileServiceUpload: runFileServiceUpload,
-        getFullCatalog: getFullCatalog
+        getFullCatalog: getFullCatalog,
+        getBlobCatalog: getBlobCatalog
     }
 }
 
   
-module.exports = azureStorage;
+module.exports = azureFilesController;
