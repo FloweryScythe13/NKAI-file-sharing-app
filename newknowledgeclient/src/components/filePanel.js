@@ -7,8 +7,8 @@ import { FileFooter } from './fileFooter';
 import { store } from '../FileStore';
 
 const maxFilesInPage = 20;
-
-export const FilePanel = observer(class FilePanel extends React.Component {
+@observer
+export class FilePanel extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -56,7 +56,7 @@ export const FilePanel = observer(class FilePanel extends React.Component {
                         id={ file.id }
                         selected={ file.selected }
                         name={ file.name } 
-                        fileName={ file.fileName }
+                        fileName={ file.name }
                         previewPath={ file.previewPath }
                         path={ file.path }/>
                     }
@@ -71,4 +71,4 @@ export const FilePanel = observer(class FilePanel extends React.Component {
             </div>
         );
     }
-});
+};

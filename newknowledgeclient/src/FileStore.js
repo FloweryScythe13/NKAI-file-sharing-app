@@ -19,12 +19,13 @@ class FileViewStore {
             return;
         }
 
-        //return request.get(`http://localhost:3000/path?base=${path}`)
-        return fetch(`${path}`)
-            .then(res => res.json())
+        return request.get(`http://localhost:3000/catalog/${path}`)
             .then(res => {
                 // alter this when in real application
-                const { directories, files } = res.output;
+                console.log(res.body.directories);
+                const directories = res.body.directories;
+                const files = res.body.files;
+                
                 this.directories.set(path, directories);
                 this.files.set(path, files);
             })
@@ -38,20 +39,19 @@ class FileViewStore {
 
     /**
      * when file is either selected or unselected
-     * @param {string} id - name id
+     * @param {number} id - id
      * @param {string} path - path
      * @param {bool} isDir - isDir
      */
     async onFileSelected(id, path, isDir) {
-        const clickItem = item => item.name === id; 
+        const clickItem = item => item.id === id; 
         if (isDir) {
             if (!this.directories.has(path))
                 throw new Error('Directory not found.');
-                //cannot read property 'path' of undefined here...
-            var dirs = this.directories.get(path);
+            var dirs = this.directories.get(path); 
             var clickedDir = dirs.find(clickItem);
-            var clickedPath = `${clickedDir.path}`,
-                clicked = clickedDir.selected = !clickedDir.selected;
+            var clickedPath = `${clickedDir.path}`;
+            var clicked = clickedDir.selected = !clickedDir.selected;
             await this.listDirectoryFiles(clickedPath, false);
             this.files.get(clickedPath).map(f => f.selected = clicked);
         } else {
@@ -100,4 +100,6 @@ export var store = window.store = new FileViewStore;
 
 autorun(() => {
     console.log('path changed --> ', store.currentPath);
+    console.log('store directories changed --> ', store.directories);
+    console.log('store files changed -->', store.files);
 })

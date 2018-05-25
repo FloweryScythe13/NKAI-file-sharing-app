@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { store } from '../FileStore';
 import { decorate } from 'mobx';
 
-export const FileViewHeaderPath = observer(class FileViewHeaderPath extends React.Component {
+@observer
+export class FileViewHeaderPath extends React.Component {
     constructor(props) {
         super(props);
         ['renderPath', 'onPathBtnClick'].map(fn => this[fn] = this[fn].bind(this));
@@ -70,4 +71,4 @@ export const FileViewHeaderPath = observer(class FileViewHeaderPath extends Reac
             </div>
         );
     }
-}); 
+}; 

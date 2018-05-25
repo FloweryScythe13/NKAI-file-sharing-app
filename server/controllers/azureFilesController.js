@@ -1,6 +1,8 @@
 var azure = require('azure-storage');
 var util = require('util');
 var fs = require('fs');
+var stream = require('stream')
+var BrowserFileReadStream = require('../models/browserfilereadstream');
 
 var azureFilesController = function() {
     function readConfig() {
@@ -95,6 +97,8 @@ var azureFilesController = function() {
         function handler(r) {
             self.items.files.push.apply(self.items.files, r.entries.files);
             self.items.directories.push.apply(self.items.directories, r.entries.directories);
+            self.items.files.forEach(file => file.path = self.directoryName + '/' + file.name);
+            self.items.directories.forEach(dir => dir.path = self.directoryName + '/' + dir.name);
             if (r.continuationToken) {
                 return self.listAllFilesAndDirectories(r.continuationToken);
             }
@@ -124,28 +128,6 @@ var azureFilesController = function() {
         });
 
         return promise;
-
-        // return await listFilesAndDirectories(fileService, shareName, directory, null, null, output, function (error, results) {
-        //     if (error) {
-        //         console.log('Error occurred when listing all files: ' + error.message);
-        //     }
-        //     else {
-        //         var x = '';
-        //         var y = '';
-        //         for (var i = 0; i < results.files.length; i++) {
-        //             x = results.files[i].name;
-        //             output += x + '\n'; 
-        //             console.log(util.format('  - %s (type: file)'), results.files[i].name);
-        //         }
-        //         for (var j = 0; j < results.directories.length; j++) {
-        //             y = results.directories[j].name;
-        //             output += y + '\n'; 
-        //             console.log(util.format('  - %s (type: directory)'), results.directories[j].name);
-        //         }
-        //         return output;
-        //     }
-        // });
-        //return !!output ? output : 'no results';
     }
 
     
@@ -178,12 +160,44 @@ var azureFilesController = function() {
         
     }
 
-    
+
+    AzureFileReader.prototype.uploadFileToDirectory = function(fileName, stream, streamSize) {
+        var self = this;
+        
+        return new Promise((resolve, reject) => {
+           self.fileService.createFileFromStream(self.shareName, self.directoryName, fileName, stream, streamSize, function(error, result) {
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                }
+                else {
+                    resolve(result);
+                }
+           })
+        })
+    }
+
+    function uploadFile(directoryName, file) {
+        var fileService = azure.createFileService(readConfig().connectionString);
+
+        var shareName = 'newknowledgeapp';
+        var directory = directoryName ? decodeURI(directoryName) : '/';
+        var uploader = new AzureFileReader(fileService, shareName, directory);
+
+        var fileStream = new stream.Readable();
+        fileStream.push(file.buffer);
+        fileStream.push(null);
+        var promise = uploader.uploadFileToDirectory(file.originalname, fileStream, file.buffer.length).then(result => console.log(result))
+            .catch(function(error) {
+                console.log(error);
+            });
+        return promise;
+    }
 
     return {
         runFileServiceUpload: runFileServiceUpload,
-        getFullCatalog: getFullCatalog,
-        getBlobCatalog: getBlobCatalog
+        getFullCatalog: getFullCatalog, 
+        uploadFile: uploadFile
     }
 }
 

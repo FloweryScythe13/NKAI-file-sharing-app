@@ -47,6 +47,7 @@ var azureBlobsController = function() {
 
     AzureBlobReader.prototype.blobRetriever = function(token) {
         var self = this;
+        
         return new Promise(function (resolve, reject) {
             self.blobService.listBlobsSegmentedWithPrefix(self.containerName, self.prefix, token, null, function(error, result) {
                 if (error) {
@@ -73,7 +74,31 @@ var azureBlobsController = function() {
         }
     }
     
-
+    function getFiles(collection){
+        var items = [];
+        for(var key in collection){
+            var item = collection[key];
+            var itemName = item.name.split('/')[item.name.split('/').length - 1];
+            items.push({ 'text': itemName, 'classes': 'file'});
+        }
+        return items;
+    }
+    
+    function getFoldersFromCollection(containerName, collection){
+        var items = [];
+        //if BlobPrefix contains one folder is a simple JSON. Otherwise is an array of JSONs
+        if (collection && !collection.length){
+            temp = collection;
+            collection = [];
+            collection.push(temp);
+        }
+        for(var key in collection){
+            var item = collection[key];
+            var itemName = item.Name.replace(/\/$/, '').split('/')[item.Name.replace(/\/$/, '').split('/').length - 1];
+            items.push({ 'text': itemName, 'classes': 'folder' });
+        }
+        return items;
+    }
     
 
     function getBlobCatalog(directoryName) {

@@ -5,7 +5,8 @@ import { CheckBox } from './checkbox';
 import { store } from '../FileStore'; 
 import { decorate } from 'mobx';
 
-export const FileInfo = observer(class FileInfo extends React.Component {
+@observer
+export class FileInfo extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -54,4 +55,4 @@ export const FileInfo = observer(class FileInfo extends React.Component {
             </div>
         );
     }
-});
+};
