@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import { FileInfo } from './fileInfo';
 import { FileFooter } from './fileFooter';
 import { store } from '../FileStore';
+import { FilePreviewPage } from './filePreviewPage';
 
 const maxFilesInPage = 20;
 @observer
@@ -32,6 +33,11 @@ export class FilePanel extends React.Component {
 
         if (!directories || !files)
             return null;
+        if (!!store.selectedFile) {
+            return (
+                <FilePreviewPage filePath={store.selectedFile} />
+            )
+        }
         return (directories.length + files.length) > 0 ? (
             <div style={ { minHeight: '40vh' } }>
                 { directories.map(dir => {
@@ -52,8 +58,8 @@ export class FilePanel extends React.Component {
                     return (index > upperBound || index <= lowerBound) ? 
                         null :
                     <FileInfo 
-                        key={ file.id }
-                        id={ file.id }
+                        key={ file.name }
+                        id={ file.name }
                         selected={ file.selected }
                         name={ file.name } 
                         fileName={ file.name }

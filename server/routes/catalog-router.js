@@ -29,11 +29,21 @@ router.get('/*', function(req, res) {
 //     })
 // })
 
-router.post('/*', upload.single('file'), function(req, res) {
+router.post('/upload/*', upload.single('file'), function(req, res) {
     if(req.file && req.file.originalname) {
         var x = new azureFilesController().uploadFile(req.path, req.file);
         x.then(() => new azureFilesController().getFullCatalog(req.path).then(result => res.json(result)))
     }
+    
+})
+
+router.post('/lookups', function(req, res) {
+    var pathname = req.body.filePath;
+    //validate the pathname, then
+    new azureFilesController().getFileLink(pathname).then(result => res.json({fileUrl: result}))
+        .catch(function(error) {
+            console.log(error);
+        });
     
 })
 

@@ -41,7 +41,7 @@ app.use(session({
 }));
 
 app.use(function(req, resp, next) {
-  if (req.cookies.newknowledgefileshare && !req.session.user) {
+  if (req.cookies.newknowledgefileshare && !req.session.currentUser) {
     resp.clearCookie('newknowledgefileshare');
   }
   next();
@@ -55,6 +55,8 @@ app.use(function(req, res, next) {
 
 app.use(function(req, resp, next) {
   resp.setHeader('X-Frame-Options', 'DENY');
+  resp.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  resp.setHeader('Access-Control-Allow-Credentials', 'true');
   next();
 })
 

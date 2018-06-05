@@ -23,7 +23,10 @@ router.post('/login', function(req, res, next) {
         type: 'success',
         message: `Thanks for logging in ${user.username}!`
       }
-      res.redirect(301, '/index');
+      // res.redirect(301, '/index');
+      res.send('status OK, login request succeeded')
+        .header("Access-Control-Allow-Origin: http://localhost:3001")
+        .header("Access-Control")
     })
     .catch((err) => {
 //      debug(err);
@@ -31,7 +34,7 @@ router.post('/login', function(req, res, next) {
         type: 'danger',
         message: 'There was a problem with your credentials'
       }
-      res.render('login', { title: 'New Knowledge File Explorer: Login' });
+      //res.render('login', { title: 'New Knowledge File Explorer: Login' });
     });
 });
 

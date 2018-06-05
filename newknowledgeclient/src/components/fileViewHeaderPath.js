@@ -30,6 +30,7 @@ export class FileViewHeaderPath extends React.Component {
     onPathBtnClick(fullPath, goTo) {
         var arr = fullPath.split('/');
         var index = arr.indexOf(goTo);
+        if (!!store.selectedFile) store.clearSelectedFile();
         if (index === -1) {
             store.listDirectoryFiles('/');
             return;

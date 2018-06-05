@@ -7,6 +7,7 @@ class FileViewStore {
     files = observable.map();
     currentPath = "";
     activePage = 1;
+    selectedFile = ""
     /**
      * request for the files and folders under the specify directory.
      * @param {string} path - request directory path 
@@ -18,33 +19,38 @@ class FileViewStore {
         if (this.directories.has(path) && this.files.has(path)) {
             return;
         }
-
-        return request.get(`http://localhost:3000/catalog/${path}`)
-            .then(res => {
+        var self = this;
+        request.get(`http://localhost:3000/catalog/${path}`).withCredentials()
+            .then(function(res) {
                 // alter this when in real application
-                console.log(res.body.directories);
+                //at the end of this .then() call, localhost:3000/undefined is being called. But why?
                 const directories = res.body.directories;
                 const files = res.body.files;
                 
-                this.directories.set(path, directories);
-                this.files.set(path, files);
+                self.directories.set(path, directories);
+                self.files.set(path, files);
+                return 0; 
+            }, function(rejected) {
+                console.log(rejected); 
             })
             .catch(err => {
+                console.log(err);
                 if (err.status === 403) {
                     window.location = "/";
                     return;
                 }
             })
+        return;
     }
 
     /**
      * when file is either selected or unselected
-     * @param {number} id - id
+     * @param {string} id - id (equivalent to name)
      * @param {string} path - path
      * @param {bool} isDir - isDir
      */
     async onFileSelected(id, path, isDir) {
-        const clickItem = item => item.id === id; 
+        const clickItem = item => item.name === id; 
         if (isDir) {
             if (!this.directories.has(path))
                 throw new Error('Directory not found.');
@@ -57,13 +63,14 @@ class FileViewStore {
         } else {
             if (!this.files.has(path))
                 throw new Error('File not found.');
-            var files = this.files.get(path), 
-                clickedFile = files.find(clickItem),
-                clicked = clickedFile.selected = !clickedFile.selected,
-                parentDirPath = path.substring(0, path.lastIndexOf('/')),
+            var files = this.files.get(path); 
+            var clickedFile = files.find(clickItem);
+            //var clicked = clickedFile.selected = !clickedFile.selected;
+            var parentDirPath = path.substring(0, path.lastIndexOf('/')),
                 parentDir = this.directories.get(parentDirPath ? parentDirPath : '/');
             if (path !== '/' && parentDir) {
                 let dir = parentDir.find(item => item.path === path);
+                this.getFileLink(clickedFile.path);
                 if (!clicked) {
                     if (dir) dir.selected = false;
                 } else {
@@ -84,6 +91,28 @@ class FileViewStore {
             return;
         this.activePage = parseInt(page);
     }
+
+
+    /**
+     * When a file has been clicked on, get that file's URL from the API,
+     * set it as the new value of the selectedFile observable, and render the
+     * FilePreview component with that new URL (so that the nested PDF-reader
+     * component can go read the file from Azure)
+     * @param {string} path
+     */
+    getFileLink(path) {
+        var self = this; 
+        return request.post('/catalog/lookups').send({ filePath: path })
+            .then(function(result) {
+                console.log(result);
+                self.selectedFile = result.body.fileUrl;
+            });
+    }
+
+    clearSelectedFile() {
+        this.selectedFile = "";
+    }
+
 }
 
 decorate(FileViewStore, {
@@ -91,9 +120,12 @@ decorate(FileViewStore, {
     files: observable,
     currentPath: observable,
     activePage: observable,
+    selectedFile: observable,
     listDirectoryFiles: action.bound,
     onFileSelected: action.bound,
-    onPageChange: action.bound
+    onPageChange: action.bound,
+    getFileLink: action.bound,
+    clearSelectedFile: action.bound
 })
 
 export var store = window.store = new FileViewStore;

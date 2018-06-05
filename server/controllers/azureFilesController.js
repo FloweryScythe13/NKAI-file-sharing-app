@@ -177,6 +177,38 @@ var azureFilesController = function() {
         })
     }
 
+    AzureFileReader.prototype.doesDirectoryExist = async function() {
+        var self = this;
+        return new Promise((resolve, reject) => {
+            self.fileService.doesDirectoryExist(self.shareName, self.directoryName, function(error, result) {
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                }
+                else {
+                    resolve(result);
+                }
+            })
+        })
+    }
+
+    AzureFileReader.prototype.doesFileExist = async function(file) {
+        var self = this;
+        return new Promise((resolve, reject) => {
+            self.fileService.doesFileExist(self.shareName, self.directoryName, file, function(error, result) {
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                }
+                else {
+                    resolve(result);
+                }
+            })
+        })
+    };
+
+    
+
     function uploadFile(directoryName, file) {
         var fileService = azure.createFileService(readConfig().connectionString);
 
@@ -194,10 +226,45 @@ var azureFilesController = function() {
         return promise;
     }
 
+
+    async function getFileLink(pathname) {
+        var fileReq = decodeURI(pathname);
+        var directory = fileReq.substr(0, fileReq.lastIndexOf('/'));
+        var fileName = fileReq.substr(fileReq.lastIndexOf('/') + 1);
+        var fileService = azure.createFileService(readConfig().connectionString);
+
+        var shareName = 'newknowledgeapp';
+        
+        var reader = new AzureFileReader(fileService, shareName, directory);
+        var dirExists = await reader.doesDirectoryExist().then(result => result.exists);
+        var fileExists = dirExists ? await reader.doesFileExist(fileName) : false;
+        if (dirExists && fileExists) {
+            var startDate = new Date();
+            var endDate = new Date(startDate);
+            endDate.setMinutes(startDate.getMinutes() + 60);
+            var sharedAccessPolicy = {
+                AccessPolicy: {
+                    Permissions: azure.FileUtilities.SharedAccessPermissions.READ, 
+                    Start: startDate,
+                    Expiry: endDate
+                }
+            };
+            var token = fileService.generateSharedAccessSignature(shareName, directory, fileName, sharedAccessPolicy);
+            var sasUrl = fileService.getUrl(shareName, directory, fileName, token);
+            return sasUrl;
+        }
+        //TODO: improve this so a 404 doesn't break the server and leave the client hanging (metaphorically or literally)
+        else {
+            throw Error('The file or directory path specified was not found.');
+        }
+        
+    }
+
     return {
         runFileServiceUpload: runFileServiceUpload,
         getFullCatalog: getFullCatalog, 
-        uploadFile: uploadFile
+        uploadFile: uploadFile,
+        getFileLink: getFileLink
     }
 }
 
