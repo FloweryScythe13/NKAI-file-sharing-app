@@ -1,5 +1,6 @@
 import React from 'react';
 import request from 'superagent';
+import AxiosAPI from '../axiosApi';
 import { Route, Link, Switch } from 'react-router-dom';
 var withRouter = require('react-router').withRouter;
 
@@ -11,7 +12,7 @@ class Navbar extends React.Component {
 
     _logout(event) {
         event.preventDefault();
-        request.post('/auth/logout');
+        AxiosAPI.post('/auth/logout');
         this.props.history.push('/login');
     }
     

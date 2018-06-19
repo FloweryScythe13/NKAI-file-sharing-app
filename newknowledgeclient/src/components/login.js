@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Button } from 'react-bootstrap';
 import request from 'superagent';
+import AxiosAPI from '../axiosApi';
 
 export class LoginPage extends React.Component {
     constructor(props) {
@@ -36,8 +37,7 @@ export class LoginPage extends React.Component {
     _onLoginSubmit(e) {
         e.preventDefault();
         var that = this;
-        return request.post('http://localhost:3000/auth/login' ).withCredentials()
-                .send({ username: that.state.username, password: that.state.password  })
+        return AxiosAPI.post('auth/login', { username: that.state.username, password: that.state.password  })
                 .end((err, res) => {
                     console.log(res);
                 }).then(res => {

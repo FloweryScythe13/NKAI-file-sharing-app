@@ -3,6 +3,7 @@ var util = require('util');
 var fs = require('fs');
 var stream = require('stream')
 var BrowserFileReadStream = require('../models/browserfilereadstream');
+var AzureFileReader = require('../models/azureFileReader');
 
 var azureFilesController = function() {
     function readConfig() {
@@ -68,47 +69,7 @@ var azureFilesController = function() {
 
 
 
-    //Use this class to wrap all continuation tokens/callbacks with Promises
-    function AzureFileReader(fileService, shareName, directoryName) {
-        this.fileService = fileService;
-        this.shareName = shareName;
-        this.directoryName = directoryName;
-        this.items = { files: [], directories: [] }
-    }
-    //Use this class to retrieve the files and directories and turn the result directly into a promise
-    AzureFileReader.prototype.retriever = function(token) {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-            self.fileService.listFilesAndDirectoriesSegmented(self.shareName, self.directoryName, token, null, function(error, result) {
-                if (error) {
-                    console.log(error);
-                    reject(error);
-                }
-                else {
-                    resolve(result);
-                }
-            })
-        });
-    };
-
-    //Recursively read the results from retriever
-    AzureFileReader.prototype.listAllFilesAndDirectories = function(token) {
-        var self = this;
-        function handler(r) {
-            self.items.files.push.apply(self.items.files, r.entries.files);
-            self.items.directories.push.apply(self.items.directories, r.entries.directories);
-            self.items.files.forEach(file => file.path = self.directoryName + '/' + file.name);
-            self.items.directories.forEach(dir => dir.path = self.directoryName + '/' + dir.name);
-            if (r.continuationToken) {
-                return self.listAllFilesAndDirectories(r.continuationToken);
-            }
-            else {
-                return self.items;
-            }
-        }
-
-        return this.retriever(token).then(handler);
-    }
+    
 
     
 
@@ -116,7 +77,7 @@ var azureFilesController = function() {
         var fileService = azure.createFileService(readConfig().connectionString);
 
         var shareName = 'newknowledgeapp';
-        var directory = directoryName ? decodeURI(directoryName) : '/';
+        var directory = directoryName ? decodeURI(directoryName) : '';
         var output = '';
 
         var reader = new AzureFileReader(fileService, shareName, directory);
@@ -161,52 +122,7 @@ var azureFilesController = function() {
     }
 
 
-    AzureFileReader.prototype.uploadFileToDirectory = function(fileName, stream, streamSize) {
-        var self = this;
-        
-        return new Promise((resolve, reject) => {
-           self.fileService.createFileFromStream(self.shareName, self.directoryName, fileName, stream, streamSize, function(error, result) {
-                if (error) {
-                    console.log(error);
-                    reject(error);
-                }
-                else {
-                    resolve(result);
-                }
-           })
-        })
-    }
-
-    AzureFileReader.prototype.doesDirectoryExist = async function() {
-        var self = this;
-        return new Promise((resolve, reject) => {
-            self.fileService.doesDirectoryExist(self.shareName, self.directoryName, function(error, result) {
-                if (error) {
-                    console.log(error);
-                    reject(error);
-                }
-                else {
-                    resolve(result);
-                }
-            })
-        })
-    }
-
-    AzureFileReader.prototype.doesFileExist = async function(file) {
-        var self = this;
-        return new Promise((resolve, reject) => {
-            self.fileService.doesFileExist(self.shareName, self.directoryName, file, function(error, result) {
-                if (error) {
-                    console.log(error);
-                    reject(error);
-                }
-                else {
-                    resolve(result);
-                }
-            })
-        })
-    };
-
+    
     
 
     function uploadFile(directoryName, file) {
@@ -260,11 +176,34 @@ var azureFilesController = function() {
         
     }
 
+
+    async function getFileDownload(pathname) {
+        var fileReq = decodeURI(pathname);
+        var directory = fileReq.substr(0, fileReq.lastIndexOf('/'));
+        var fileName = fileReq.substring(fileReq.lastIndexOf('/') + 1);
+        var shareName = 'newknowledgeapp';
+        var fileService = azure.createFileService(readConfig().connectionString);
+
+        var reader = new AzureFileReader(fileService, shareName, directory);
+        var dirExists = await reader.doesDirectoryExist().then(result => result.exists);
+        var fileExists = dirExists ? await reader.doesFileExist(fileName) : false;
+        if (dirExists && fileExists) {
+            var fileStream = reader.getFileToStream(fileName, fs.createWriteStream(fileName))
+                .catch(error => console.log(error));
+            return fileStream;
+        }
+        else {
+            throw Error('The file specified was not found.');
+        }
+    }
+
+
     return {
         runFileServiceUpload: runFileServiceUpload,
         getFullCatalog: getFullCatalog, 
         uploadFile: uploadFile,
-        getFileLink: getFileLink
+        getFileLink: getFileLink,
+        getFileDownload: getFileDownload
     }
 }
 

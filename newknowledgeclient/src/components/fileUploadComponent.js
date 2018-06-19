@@ -1,6 +1,8 @@
 import React from 'react';
 import DropzoneComponent from 'react-dropzone-component';
 import { store } from '../FileStore';
+import '../../node_modules/dropzone/dist/min/dropzone.min.css';
+import '../../node_modules/react-dropzone-component/styles/filepicker.css';
 
 export class FileUploadComponent extends React.Component {
     constructor(props) {
@@ -8,19 +10,28 @@ export class FileUploadComponent extends React.Component {
 
         this.djsConfig = {
             addRemoveLinks: true,
-            acceptedFiles: "image/*,application/pdf,application/msword,.odt"
+            acceptedFiles: "image/*,application/pdf,application/msword,.odt",
+            params: {
+                dir: this.props.path
+            }
         }
 
         this.componentConfig = {
             iconFiletypes: ['.jpg', '.png', '.gif', '.doc', '.pdf'],
             showFiletypeIcon: true,
-            postUrl: `/catalog/${this.props.path}`
+            postUrl: `/catalog/upload${this.props.path}`
         }
 
-        this.success = file => console.log('uploaded', file);
+        this.success = function(file) { 
+            console.log('uploaded', file);
+            store.listDirectoryFiles(this.props.path);
+        }
         this.added = function() {console.log('file added')};
         this.dropped = function() {console.log('file dropped into dropzone')}
         this.dropzone = null;
+
+        this.success = this.success.bind(this);
+        this.complete = () => store.listDirectoryFiles(this.props.path);
     }
 
     render() {

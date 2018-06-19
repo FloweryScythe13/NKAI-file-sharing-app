@@ -1,13 +1,16 @@
 import { observable, observe, autorun, computed, action, decorate } from 'mobx';
 import React from 'react';
 import request from 'superagent';
+import AxiosAPI from './axiosApi';
 
 class FileViewStore {
     directories = observable.map();
     files = observable.map();
     currentPath = "";
     activePage = 1;
-    selectedFile = ""
+    selectedFile = "";
+    selectedFileName = "";
+    isAuthenticated = false;
     /**
      * request for the files and folders under the specify directory.
      * @param {string} path - request directory path 
@@ -20,12 +23,13 @@ class FileViewStore {
             return;
         }
         var self = this;
-        request.get(`http://localhost:3000/catalog/${path}`).withCredentials()
+        AxiosAPI.get(`catalog/${path}`)
             .then(function(res) {
                 // alter this when in real application
                 //at the end of this .then() call, localhost:3000/undefined is being called. But why?
-                const directories = res.body.directories;
-                const files = res.body.files;
+                console.log(res);
+                const directories = res.data.directories;
+                const files = res.data.files;
                 
                 self.directories.set(path, directories);
                 self.files.set(path, files);
@@ -35,10 +39,10 @@ class FileViewStore {
             })
             .catch(err => {
                 console.log(err);
-                if (err.status === 403) {
-                    window.location = "/";
-                    return;
-                }
+                // if (err.status === 401) {
+                //     window.location = "/";
+                //     return;
+                // }
             })
         return;
     }
@@ -70,7 +74,7 @@ class FileViewStore {
                 parentDir = this.directories.get(parentDirPath ? parentDirPath : '/');
             if (path !== '/' && parentDir) {
                 let dir = parentDir.find(item => item.path === path);
-                this.getFileLink(clickedFile.path);
+                this.getFileLink(clickedFile.path, clickedFile.name);
                 if (!clicked) {
                     if (dir) dir.selected = false;
                 } else {
@@ -100,18 +104,41 @@ class FileViewStore {
      * component can go read the file from Azure)
      * @param {string} path
      */
-    getFileLink(path) {
+    getFileLink(path, name) {
         var self = this; 
-        return request.post('/catalog/lookups').send({ filePath: path })
+        
+        return AxiosAPI.post('/catalog/lookups', { filePath: path })
             .then(function(result) {
                 console.log(result);
-                self.selectedFile = result.body.fileUrl;
+                self.selectedFile = result.data.fileUrl;
+                self.selectedFileName = name;
+                console.log(self.selectedFileName)
+            });
+    }
+
+    getFileDownload(path) {
+        var self = this; 
+        return AxiosAPI.post('/catalog/downloads', { fileUrl: path })
+            .then(function(result) {
+                console.log(result);
+                //self.selectedFile = result.data.fileUrl;
             });
     }
 
     clearSelectedFile() {
         this.selectedFile = "";
     }
+
+
+    isAuth() {
+        this.isAuthenticated = true;
+    }
+
+    isNotAuth() {
+        this.isAuthenticated = false;
+    }
+
+
 
 }
 
@@ -121,11 +148,16 @@ decorate(FileViewStore, {
     currentPath: observable,
     activePage: observable,
     selectedFile: observable,
+    selectedFileName: observable,
+    isAuthenticated: observable,
     listDirectoryFiles: action.bound,
     onFileSelected: action.bound,
     onPageChange: action.bound,
     getFileLink: action.bound,
-    clearSelectedFile: action.bound
+    getFileDownload: action.bound,
+    clearSelectedFile: action.bound,
+    isAuth: action.bound,
+    isNotAuth: action.bound
 })
 
 export var store = window.store = new FileViewStore;

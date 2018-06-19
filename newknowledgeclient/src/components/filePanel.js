@@ -6,6 +6,7 @@ import { FileInfo } from './fileInfo';
 import { FileFooter } from './fileFooter';
 import { store } from '../FileStore';
 import { FilePreviewPage } from './filePreviewPage';
+import { Grid, Row, Col } from 'react-bootstrap';
 
 const maxFilesInPage = 20;
 @observer
@@ -35,42 +36,49 @@ export class FilePanel extends React.Component {
             return null;
         if (!!store.selectedFile) {
             return (
-                <FilePreviewPage filePath={store.selectedFile} />
+                <FilePreviewPage filePath={store.selectedFile} fileName={store.selectedFileName}/>
             )
         }
         return (directories.length + files.length) > 0 ? (
-            <div style={ { minHeight: '40vh' } }>
+            <Grid style={ { minHeight: '40vh' } }>
+                <Row>
                 { directories.map(dir => {
                     index++;
                     return (index > upperBound || index <= lowerBound) ? 
                         null :
-                        <FileInfo
-                            key={ dir.name } 
-                            id={ dir.name }
-                            isDir={ true } 
-                            selected={ dir.selected }
-                            fileName={ dir.name }
-                            path={ dir.path }/>
+                        <Col sm={6} md={4} lg={3}>
+                            <FileInfo
+                                key={ dir.name } 
+                                id={ dir.name }
+                                isDir={ true } 
+                                selected={ dir.selected }
+                                fileName={ dir.name }
+                                path={ dir.path }/>
+                        </Col> 
                     }
                 ) }
                 { files.map(file => {
                     index++;
                     return (index > upperBound || index <= lowerBound) ? 
                         null :
-                    <FileInfo 
-                        key={ file.name }
-                        id={ file.name }
-                        selected={ file.selected }
-                        name={ file.name } 
-                        fileName={ file.name }
-                        previewPath={ file.previewPath }
-                        path={ file.path }/>
+                    <Col sm={6} md={4} lg={3}>
+                        <FileInfo 
+                            key={ file.name }
+                            id={ file.name }
+                            selected={ file.selected }
+                            name={ file.name } 
+                            fileName={ file.name }
+                            previewPath={ file.previewPath }
+                            path={ file.path }/>
+                    </Col>
                     }
                 ) }
+                </Row>
                 <FileFooter activePage={ store.activePage }
                             maxPage={Math.ceil((directories.length + files.length) / maxFilesInPage)}
                             maxPageDisplay={5}/>
-            </div>
+                
+            </Grid>
         ) : (
             <div style={ { height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' } }>
                 <div style={ { color: '#aaa' } }>沒有結果</div>
