@@ -16,7 +16,6 @@ export class FileView extends React.Component {
     }
     
     render() {
-        console.log(store.directories.entries);
         return (
             <div className='f-panel'>
                 <FileViewHeader path={store.currentPath}/>

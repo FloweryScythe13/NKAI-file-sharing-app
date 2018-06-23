@@ -48,7 +48,7 @@ export class FilePanel extends React.Component {
                         null :
                         <Col sm={6} md={4} lg={3}>
                             <FileInfo
-                                key={ dir.name } 
+                                key={ index } 
                                 id={ dir.name }
                                 isDir={ true } 
                                 selected={ dir.selected }
@@ -63,7 +63,7 @@ export class FilePanel extends React.Component {
                         null :
                     <Col sm={6} md={4} lg={3}>
                         <FileInfo 
-                            key={ file.name }
+                            key={ index }
                             id={ file.name }
                             selected={ file.selected }
                             name={ file.name } 

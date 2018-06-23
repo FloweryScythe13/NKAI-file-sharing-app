@@ -17,11 +17,7 @@ function bounceOutIfLoggedOut(req, res, callback, fallbackPath = '/') {
   if (isAuthenticated(req)) {
     return callback();
   } else {
-    req.session.sessionFlash = {
-      type: 'danger',
-      message: 'You must be authenticated in order to visit this page'
-    }
-    res.redirect(307, fallbackPath);
+    res.sendStatus(401);
   }
 }
 

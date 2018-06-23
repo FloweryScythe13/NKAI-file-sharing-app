@@ -1,3 +1,9 @@
+/* Extension of Azure Blob Service to retrieve both Blobs and BlobPrefixes for a given hierarchical level in a single 
+ * call. 
+ *
+ * Defunct/buggy code. 
+*/
+
 var azure = require('azure-storage');
 var _ = require('underscore');
 var extend = require('extend');

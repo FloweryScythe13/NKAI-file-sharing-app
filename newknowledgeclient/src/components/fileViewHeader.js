@@ -1,9 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { observer } from 'mobx-react';
+import { decorate } from 'mobx';
 import { FileViewHeaderPath } from './fileViewHeaderPath';
 import { Form, FormControl, FormGroup, Modal, Button, ButtonToolbar, ButtonGroup, Glyphicon, Collapse } from 'react-bootstrap';
 import { FileUploadComponent } from './fileUploadComponent';
+import { store } from '../FileStore';
 
+@observer
 export class FileViewHeader extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -53,15 +57,10 @@ export class FileViewHeader extends React.Component {
                         </button>
                     </div>
                     <div className="btn-group mr-1 f-hide-if-sm" role="group" aria-label="Second group">
-                        <Button className='btn btn-light btn-sm' onClick={() => that.setState({open: !that.state.open })} >
+                        <Button className='btn btn-light btn-sm' disabled={store.selectedFile.length > 0} onClick={() => that.setState({open: !that.state.open })} >
                             <Glyphicon glyph="cloud-upload" />
                         </Button>
                     </div>
-                    {/* <div className="btn-group" role="group" aria-label="Third group">
-                        <button className='btn btn-light btn-sm'>
-                            <i className='fa fa-trash'/>
-                        </button>
-                    </div> */}
                     <Modal show={this.state.open} onHide={this.handleClose} >
                         <Modal.Header closeButton>
                             <Modal.Title>Upload File</Modal.Title>
@@ -71,17 +70,7 @@ export class FileViewHeader extends React.Component {
                         </Modal.Body>
                     </Modal>
                     </ButtonGroup>
-                </ButtonToolbar>
-                {/* <div className="input-group f-head-search">
-                    <input type="text" className="form-control form-control-sm" placeholder="搜尋..."/>
-                    <div className="input-group-append">
-                        <button className="btn btn-primary btn-sm">
-                            <i className="fa fa-search"></i>
-                        </button>
-                    </div>
-                </div> */}
-                
-                
+                </ButtonToolbar>          
             </div>
         );
     }

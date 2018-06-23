@@ -244,3 +244,11 @@ div.f-hide-if-sm {
 .pdf-btn-wrap .pdf-download-wrap {
 	text-align: right;
 }
+
+.react-layout-components--box {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}

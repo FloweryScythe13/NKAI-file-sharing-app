@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Button } from 'react-bootstrap';
 import request from 'superagent';
 import AxiosAPI from '../axiosApi';
+import { store } from '../FileStore';
 
 export class LoginPage extends React.Component {
     constructor(props) {
@@ -17,8 +18,6 @@ export class LoginPage extends React.Component {
         this._onLoginSubmit = this._onLoginSubmit.bind(this);
     }
 
-    
-
     _updateState(e) {
         var key = e.target.id;
         var value = e.target.value;
@@ -26,6 +25,7 @@ export class LoginPage extends React.Component {
         keysToUpdate[key] = value;
         this.setState(keysToUpdate);
     }
+    
     //authorization and cookie-setting logic + AJAX calls go in here
     /* 1. User presses Login submit button
      * 2. The email and password values currently in the component state are sent in a request to http://localhost:3000/login
@@ -38,11 +38,13 @@ export class LoginPage extends React.Component {
         e.preventDefault();
         var that = this;
         return AxiosAPI.post('auth/login', { username: that.state.username, password: that.state.password  })
-                .end((err, res) => {
-                    console.log(res);
-                }).then(res => {
+                .then(res => {
+                    store.isAuth();
                     this.props.history.push("/")
                 })
+                .catch(error =>
+                    console.log(error)
+                )
     }
 
     render() {

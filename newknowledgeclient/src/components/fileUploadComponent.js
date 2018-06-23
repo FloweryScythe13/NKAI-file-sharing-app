@@ -23,7 +23,6 @@ export class FileUploadComponent extends React.Component {
         }
 
         this.success = function(file) { 
-            console.log('uploaded', file);
             store.listDirectoryFiles(this.props.path);
         }
         this.added = function() {console.log('file added')};
@@ -42,7 +41,6 @@ export class FileUploadComponent extends React.Component {
             addedFile: this.added,
             success: this.success
         }
-
         return <DropzoneComponent config={config} eventHandlers={eventHandlers} djsConfig={djsConfig} />
     }
 }

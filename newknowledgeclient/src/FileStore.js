@@ -109,10 +109,8 @@ class FileViewStore {
         
         return AxiosAPI.post('/catalog/lookups', { filePath: path })
             .then(function(result) {
-                console.log(result);
                 self.selectedFile = result.data.fileUrl;
                 self.selectedFileName = name;
-                console.log(self.selectedFileName)
             });
     }
 

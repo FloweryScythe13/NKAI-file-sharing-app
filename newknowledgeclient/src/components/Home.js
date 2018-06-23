@@ -1,4 +1,6 @@
 import React from 'react';
+import Box from 'react-layout-components';
+import { PageHeader } from 'react-bootstrap';
 
 export class Home extends React.Component {
     constructor(props) {
@@ -7,10 +9,11 @@ export class Home extends React.Component {
 
     render() {
         return (
-            <div>
-                <h2>Home</h2>
-                <p>This is the home page</p>
-            </div>
+            
+                    <div>
+                        <PageHeader>Home</PageHeader>
+                        <p>This is the home page</p>
+                    </div>
             
         );
     }

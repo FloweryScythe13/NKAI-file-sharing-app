@@ -10,7 +10,6 @@ const SQLiteStore = require('connect-sqlite3')(session);
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var elasticSearchRouter = require('./routes/elastic-search-router');
 var catalogRouter = require('./routes/catalog-router');
 var registerRouter = require('./routes/register');
 var authRouter = require('./routes/auth');
@@ -47,12 +46,6 @@ app.use(function(req, resp, next) {
   next();
 })
 
-app.use(function(req, res, next) {
-  res.locals.currentUser = req.session.currentUser || null;
-  next();
-})
-
-
 app.use(function(req, resp, next) {
   resp.setHeader('X-Frame-Options', 'DENY');
   resp.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -60,10 +53,14 @@ app.use(function(req, resp, next) {
   next();
 })
 
+app.use(function(req, res, next) {
+  res.locals.currentUser = req.session.currentUser || null;
+  next();
+})
+
+
 app.use('/index', indexRouter);
 app.use('/users', usersRouter);
-app.use('/createIndex', elasticSearchRouter);
-app.use('/health', elasticSearchRouter);
 app.use('/catalog', catalogRouter);
 app.use('/auth', authRouter);
 app.use('/register', registerRouter)

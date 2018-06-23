@@ -22,4 +22,7 @@ yarn-error.log*
 /data/*.pdf
 /data/*.docx
 /data/*.html
+/data/*.doc
+/data/*.djvu
+/data/*
 app.config

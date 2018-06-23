@@ -2,6 +2,7 @@ import React from 'react';
 import request from 'superagent';
 import AxiosAPI from '../axiosApi';
 import { Route, Link, Switch } from 'react-router-dom';
+import { Nav, NavItem } from 'react-bootstrap';
 var withRouter = require('react-router').withRouter;
 
 class Navbar extends React.Component {
@@ -12,21 +13,25 @@ class Navbar extends React.Component {
 
     _logout(event) {
         event.preventDefault();
-        AxiosAPI.post('/auth/logout');
-        this.props.history.push('/login');
+        AxiosAPI.post('/auth/logout')
+            .then(res => {
+                this.props.history.push('/login');
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        
     }
     
-
     render() {
         return (
-            <nav className="navbar navbar-light">
-                <ul className="nav navbar-nav">
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/catalog">Catalog</Link></li>
-                    <li><Link to="/login">Login</Link></li>
-                    <li><a onClick={ this._logout } href="#">Logout</a></li>
-                </ul>
-            </nav>
+            <Nav bsStyle="pills">
+                
+                    <NavItem eventKey={1}><Link to="/">Home</Link></NavItem>
+                    <NavItem eventKey={2}><Link to="/catalog">Catalog</Link></NavItem>
+                    <NavItem eventKey={3}><a onClick={ this._logout } href="#">Logout</a></NavItem>
+                
+            </Nav>
         )
     }
 }

@@ -61,17 +61,7 @@ var azureFilesController = function() {
         });
 
        
-    }
-
-    
-
-
-
-
-
-    
-
-    
+    }  
 
     function getFullCatalog(directoryName) {
         var fileService = azure.createFileService(readConfig().connectionString);

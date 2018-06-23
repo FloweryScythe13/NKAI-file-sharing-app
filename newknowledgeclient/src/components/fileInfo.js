@@ -6,6 +6,7 @@ import { store } from '../FileStore';
 import { decorate } from 'mobx';
 import { Image, Thumbnail } from 'react-bootstrap';
 import pdfIcon from '../image_preview.png';
+import folderIcon from '../folder-icon.png';
 
 @observer
 export class FileInfo extends React.Component {
@@ -45,7 +46,7 @@ export class FileInfo extends React.Component {
                             store.onFileSelected(id, store.currentPath, isDir) }>
                 <div className={ `f-ele${selected ? ' f-ele-selected' : ''}` }
                     onClick={ () => isDir ? store.listDirectoryFiles(path) : null }>
-                    <Thumbnail src={ isDir ? "/static/media/folder-icon.d68fb37c.png" : pdfIcon} />
+                    <Thumbnail src={ isDir ? folderIcon : pdfIcon} />
                 </div>
                 <div className='f-ele-footer' 
                     onClick={ () => isDir ? store.onFileSelected(id, store.currentPath, isDir) : null }>

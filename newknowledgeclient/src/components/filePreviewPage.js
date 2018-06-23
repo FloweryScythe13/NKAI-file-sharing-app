@@ -50,7 +50,6 @@ export class FilePreviewPage extends React.Component {
     onClickDownload = async (e) => {
         e.preventDefault();
         var path = this.props.filePath;
-        console.log(this.props.filePath);
         var payload = await fetch(path)
         
         const blob = await (payload.blob());
@@ -64,9 +63,6 @@ export class FilePreviewPage extends React.Component {
         setTimeout(function() {
             window.URL.revokeObjectURL(data);
         }, 100);
-    
-        //window.open(document.getElementById("download-link").href);
-
     }
 
     render() {
