@@ -9,7 +9,7 @@ function registrationError(req, res, message) {
     type: 'danger',
     message
   }
-  res.render('auth/register', { title: 'New Knowledge File Explorer: Register', message });
+  res.render('register', { title: 'New Knowledge File Explorer: Register', message });
 }
 
 /* GET home page. */
