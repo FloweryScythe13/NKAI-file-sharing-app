@@ -6,7 +6,6 @@ import DevTools from 'mobx-react-devtools'
 import { Route, Link, Switch, Redirect } from 'react-router-dom';
 import {LoginPage} from './components/login';
 import {Home} from './components/Home';
-import request from 'superagent';
 import Navbar from './components/navbar';
 import { store } from './FileStore'
 

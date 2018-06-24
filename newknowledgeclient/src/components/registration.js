@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form, Button } from 'react-bootstrap';
-import request from 'superagent';
 import AxiosAPI from '../axiosApi';
 import { store } from '../FileStore';
 

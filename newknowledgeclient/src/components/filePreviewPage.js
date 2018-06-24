@@ -3,7 +3,6 @@ import { store } from '../FileStore';
 import PropTypes from 'prop-types';
 import { Document, Page } from 'react-pdf';
 import {Button, Glyphicon, OverlayTrigger, Popover} from 'react-bootstrap';
-import request from 'superagent';
 
 export class FilePreviewPage extends React.Component {
     constructor(props) {

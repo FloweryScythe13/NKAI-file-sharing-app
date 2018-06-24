@@ -1,5 +1,4 @@
 import React from 'react';
-import request from 'superagent';
 import AxiosAPI from '../axiosApi';
 import { Route, Link, Switch } from 'react-router-dom';
 import { Nav, NavItem } from 'react-bootstrap';

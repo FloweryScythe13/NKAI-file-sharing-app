@@ -1,6 +1,5 @@
 import { observable, observe, autorun, computed, action, decorate } from 'mobx';
 import React from 'react';
-import request from 'superagent';
 import AxiosAPI from './axiosApi';
 
 class FileViewStore {
