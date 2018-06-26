@@ -46,16 +46,7 @@ export class FileViewHeader extends React.Component {
                 <br />
                 <ButtonToolbar>
                     <ButtonGroup>
-                    <div className="btn-group mr-1" role="group" aria-label="First group">
-                        <button className='btn btn-light btn-sm'>
-                            <Glyphicon glyph="chevron-up" />
-                        </button>
-                    </div>
-                    <div className="btn-group mr-1" role="group" aria-label="Second group">
-                        <button className='btn btn-light btn-sm'>
-                            <Glyphicon glyph="refresh" />
-                        </button>
-                    </div>
+                    
                     <div className="btn-group mr-1 f-hide-if-sm" role="group" aria-label="Second group">
                         <Button className='btn btn-light btn-sm' disabled={store.selectedFile.length > 0} onClick={() => that.setState({open: !that.state.open })} >
                             <Glyphicon glyph="cloud-upload" />
