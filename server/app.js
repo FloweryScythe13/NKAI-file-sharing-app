@@ -48,7 +48,7 @@ app.use(function(req, resp, next) {
 
 app.use(function(req, resp, next) {
   resp.setHeader('X-Frame-Options', 'DENY');
-  resp.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  resp.setHeader('Access-Control-Allow-Origin', process.env.WEBSITE_HOSTNAME || 'http://localhost:3000');
   resp.setHeader('Access-Control-Allow-Credentials', 'true');
   next();
 })

@@ -36,7 +36,7 @@ export class LoginPage extends React.Component {
     _onLoginSubmit(e) {
         e.preventDefault();
         var that = this;
-        return AxiosAPI.post('auth/login', { username: that.state.username, password: that.state.password  })
+        return AxiosAPI.post('/auth/login', { username: that.state.username, password: that.state.password  })
                 .then(res => {
                     store.isAuth();
                     this.props.history.push("/")

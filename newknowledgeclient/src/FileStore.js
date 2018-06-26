@@ -22,7 +22,7 @@ class FileViewStore {
             return;
         }
         var self = this;
-        AxiosAPI.get(`catalog/${path}`)
+        AxiosAPI.get(`/catalog/${path}`)
             .then(function(res) {
                 // alter this when in real application
                 //at the end of this .then() call, localhost:3000/undefined is being called. But why?

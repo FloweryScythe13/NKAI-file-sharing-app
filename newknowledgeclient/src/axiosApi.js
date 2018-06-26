@@ -2,7 +2,7 @@ import axios from 'axios';
 import { store } from './FileStore';
 
 const instance =  axios.create({
-    baseURL: 'http://localhost:3000/',
+    baseURL: process.env.WEBSITE_HOSTNAME || 'http://localhost:3000',
     withCredentials: true
 });
 instance.interceptors.response.use(function (response) {
