@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Router } from 'react-router-dom';
+import history from './history';
 
-ReactDOM.render(<BrowserRouter>
+ReactDOM.render(<Router history={history}>
                     <App />
-                </BrowserRouter>, document.getElementById('root'));
+                </Router>, document.getElementById('root'));
 registerServiceWorker();

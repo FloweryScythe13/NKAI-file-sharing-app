@@ -7,7 +7,9 @@ import { Route, Link, Switch, Redirect } from 'react-router-dom';
 import {LoginPage} from './components/login';
 import {Home} from './components/Home';
 import Navbar from './components/navbar';
-import { store } from './FileStore'
+import { store } from './FileStore';
+import { Provider } from 'mobx-react';
+
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route {...rest}
@@ -23,12 +25,14 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 class App extends Component {
   render() {   
     return (
-      <div className="container">
-        <Navbar />
-        <PrivateRoute exact path="/" component={Home} />
-        <PrivateRoute path="/catalog" component={FileView} />
-        <Route path="/login" component={LoginPage} /> 
-      </div>
+      <Provider store={store}>
+        <div className="container">
+          <Navbar />
+          <PrivateRoute exact path="/" component={Home} />
+          <PrivateRoute path="/catalog" component={FileView} />
+          <Route path="/login" component={LoginPage} /> 
+        </div>
+      </Provider>
     )
   }
 }

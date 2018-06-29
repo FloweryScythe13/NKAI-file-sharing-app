@@ -1,6 +1,7 @@
 import { observable, observe, autorun, computed, action, decorate } from 'mobx';
 import React from 'react';
 import AxiosAPI from './axiosApi';
+import history from './history';
 
 class FileViewStore {
     directories = observable.map();
@@ -24,9 +25,7 @@ class FileViewStore {
         var self = this;
         AxiosAPI.get(`/catalog/${path}`)
             .then(function(res) {
-                // alter this when in real application
-                //at the end of this .then() call, localhost:3000/undefined is being called. But why?
-                console.log(res);
+                
                 const directories = res.data.directories;
                 const files = res.data.files;
                 
@@ -133,6 +132,7 @@ class FileViewStore {
 
     isNotAuth() {
         this.isAuthenticated = false;
+        history.push('/login');
     }
 
 
@@ -157,10 +157,4 @@ decorate(FileViewStore, {
     isNotAuth: action.bound
 })
 
-export var store = window.store = new FileViewStore;
-
-autorun(() => {
-    console.log('path changed --> ', store.currentPath);
-    console.log('store directories changed --> ', store.directories);
-    console.log('store files changed -->', store.files);
-})
+export var store = new FileViewStore;
